@@ -1,0 +1,48 @@
+tasks:
+  clone-znapzend:
+    type: docker/run
+    workdir: /workspace
+    image: ubuntu:bionic
+    script:
+      - apt-get update
+      - apt-get install -y git
+      - git clone -b v0.19.0 https://github.com/oetiker/znapzend
+
+  import-packaging:
+    type: docker/import
+    files: debian:znapzend/debian
+
+  build:
+    type: docker/run
+    image: ubuntu:bionic
+    workdir: /workspace/znapzend
+    script:
+      - set -ex
+      - apt-get update
+      - apt-get install -y devscripts dh-systemd unzip build-essential
+      - debuild -us -uc
+
+  export:
+    type: docker/export
+    files:
+      - znapzend_*
+      - znapzend-*
+
+  clean:
+    type: convey/clean
+    files:
+      - znapzend_*
+      - znapzend-*
+
+plans:
+  default:
+    stages:
+      - tasks:
+          - clone-znapzend
+          - import-packaging
+          - build
+          - export
+  clean:
+    stages:
+      - tasks: clean
+
