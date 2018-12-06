@@ -6,7 +6,7 @@ tasks:
     script:
       - apt-get update
       - apt-get install -y git
-      - git clone -b v0.19.0 https://github.com/oetiker/znapzend
+      - git clone -b v0.19.1 https://github.com/oetiker/znapzend
 
   import-packaging:
     type: docker/import
