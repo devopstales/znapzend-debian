@@ -5,9 +5,20 @@
 # chkconfig: 2345 20 80
 # config: /etc/default/znapzend
 # probe: true
+### BEGIN INIT INFO
+# Provides:          znapsend
+# Required-Start:    $local_fs $network $remote_fs zfs-mount
+# Required-Stop:     $local_fs $network $remote_fs zfs-mount
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Should-Start:      zfs-mount zfs-zed
+# Should-Stop:       zfs-mount zfs-zed
+# Short-Description: ZnapZend - ZFS Backup System
+# Description:       snapshots and sends datasets
+### END INIT INFO
 
 # Source function library.
-. /etc/init.d/functions
+. /lib/lsb/init-functions
 
 if [ -e /etc/default/znapzend ]; then
     . /etc/default/znapzend
@@ -15,12 +26,12 @@ fi
 
 start() {
     echo -n "Starting znapzend: "
-    daemon --check znapzend @BINDIR@/znapzend --daemonize $ZNAPZENDOPTIONS
+    daemon --name==znapzend /usr/bin/znapzend --daemonize $ZNAPZENDOPTIONS
     RETVAL=$?
     if [ $RETVAL -ne 0 ]; then
         return $RETVAL
     fi
-    touch /var/lock/subsys/znapzend
+    touch /var/lock/znapzend
     return 0
 }
 
@@ -28,7 +39,7 @@ stop() {
     echo -n "Shutting down znapzend: "
     killproc znapzend
     RETVAL=$?
-    rm -f /var/lock/subsys/znapzend
+    rm -f /var/lock/znapzend
     return $RETVAL
 }
 
@@ -50,7 +61,7 @@ case "$1" in
         killproc znapzend -HUP
         ;;
     condrestart)
-        [ -f /var/lock/subsys/znapzend ] && restart || :
+        [ -f /var/lock/znapzend ] && restart || :
         ;;
     *)
         echo "Usage: znapzend {start|stop|status|reload|restart}"
