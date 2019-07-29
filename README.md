@@ -15,9 +15,9 @@ apt install git devscripts dh-systemd unzip build-essential
 Build debs:
 
 ```sh
-git clone https://github.com/Gregy/znapzend-debian.git
+git clone https://github.com/beren12/znapzend-debian.git
 cd znapzend-debian
-git clone -b v0.19.0 https://github.com/oetiker/znapzend
+git clone -b v0.19.1 https://github.com/oetiker/znapzend
 cp -r debian/ znapzend
 cd znapzend
 debuild -us -uc
