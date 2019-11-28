@@ -18,6 +18,8 @@ Build debs:
 git clone https://github.com/beren12/znapzend-debian.git
 cd znapzend-debian
 git clone -b v0.19.1 https://github.com/oetiker/znapzend
+# there is a bug in the v0.19.1 release so use the master branch
+git clone https://github.com/oetiker/znapzend
 cp -r debian/ znapzend
 cd znapzend
 debuild -us -uc
